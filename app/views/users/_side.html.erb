@@ -1,0 +1,13 @@
+<div class="col-3">
+	<%= link_to user_path(current_user) do %>
+			<li>ホーム</li>
+	<% end %>
+	<%= link_to contacts_path do %>
+			<li>お問い合わせ</li>
+	<% end %>
+	<li><%= link_to edit_user_path(current_user) do %>
+			プロフィール
+		<% end %>
+	</li>
+	<li>投稿</li>
+</div>

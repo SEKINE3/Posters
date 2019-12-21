@@ -1,0 +1,19 @@
+
+<% if post.favorite?(post, current_user) %>
+	<div class="like_off">
+		<% if post.user.id != current_user.id %>
+			<%= link_to favorite_path(id: post.id), method: :delete, remote: true, class: "like_off_btn" do %>
+				<i class="far fa-heart" style="color: #FF6928;"></i>
+			<% end %>
+		<% end %>
+	</div>
+<% else %>
+	<div class="like_on">
+		<% if post.user.id != current_user.id %>
+			<%= link_to favorites_path(post_id: post.id), method: :post, remote: true, class: "like_on_btn" do %>
+				<i class="far fa-heart"></i>
+			<% end %>
+		<% end %>
+	</div>
+<% end %>
+

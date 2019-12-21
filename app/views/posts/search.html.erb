@@ -1,0 +1,15 @@
+<%= params[:keyword] %>の検索結果
+<% @posts.each do |post| %>
+	<%= image_tag post.user.profile_image.url %>
+	<%= post.user.name %>
+	<%= post.name %>
+	<% if post.post_image.present? %>
+		<%= image_tag post.post_image.url %>
+	<% end %>
+	<% if post.post_video.file.present? %>
+		<%= post.post_video %>
+	<% end %>
+<% end %>
+<% @users.each do |user| %>
+	<% user.name %>
+<% end %>

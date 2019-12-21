@@ -1,0 +1,16 @@
+<% sender = notification.sender %>
+<% recipient = notificatin.recipient %>
+<%= link_to user_path(sender) do %>
+	<%= sender.name %>さんが
+<% end %>
+<% case notificatin.status %>
+	<% when 'follow' then %>
+		<p>あなたをフォローしました</p>
+	<% when 'favorite' then %>
+		<%=link_to 'あなたの投稿', notification.post %>にいいねしました。
+	<% when 'commment' then %>
+		<% if notification.post.user_id == recipient.id %>
+			<%=link_to 'あなたの投稿', notification.post %>にコメントしました。
+	<%= Comment.find_by(id: notification.comment_id)&.comment %>
+<% end %>
+<%= time_ago_in_words(notification.created_at).upcase %>

@@ -1,0 +1,86 @@
+<%= link_to "ログイン", new_user_session_path %>
+<%= link_to "アカウント作成",new_user_registration_path %>
+<%= link_to "ログアウト", destroy_user_session_path, method: :delete %>
+<div class="container">
+	<div class="row">
+		<div class="col-8 col-offset2">
+			<ul class="nav nav-tabs">
+				<li class="nav-item">
+    				<a href="#post1" class="nav-link active" data-toggle="tab">最新の投稿</a>
+ 				 </li>
+ 				 <li class="nav-item">
+    				<a href="#post2" class="nav-link" data-toggle="tab">話題の投稿</a>
+ 				 </li>
+ 				 <div class="tab-content">
+  					<div id="post1" class="tab-pane active">
+  						<% @posts.each do |post| %>
+  							<div class="post-border">
+	  							<div class="row">
+	  								<div class="col-1">
+										<%= image_tag post.user.profile_image.url, :size => '50x50' %>
+									</div>
+									<div class="col-7">
+										<div class="post-user-name">
+											<%= post.user.name %>
+										</div>
+									</div>
+									<div class="col-4">
+										<% if user_signed_in? %>
+											<% if current_user != post.user %>
+												<div id="follow_form">
+													<% if current_user.following?(post.user) %>
+													    <%= render 'relationships/unfollow', user: post.user %>
+													<% else %>
+													    <%= render 'relationships/follow', user: post.user %>
+													<% end %>
+												</div>
+											<% end %>
+										<% end %>
+									</div>
+									<div class="col-10 offset-2">
+										<div class="post-body">
+											<%= post.body %>
+										</div>
+									</div>
+									<div class="col-8 offset-2">
+										<% if post.post_image.present? %>
+											<%= image_tag post.post_image.url, :size=> '400x300' %>
+										<% end %>
+										<% if post.post_video.file.present? %>
+											<%= video_tag post.post_video_url.to_s,autoplay: true, loop: true, controls: true, width: 300 %>
+										<% end %>
+									</div>
+									<div class="col-2"></div>
+									<div class="col-2 offset-2">
+										<% if user_signed_in? %>
+											<div id="favorite_btn_<%= post.id %>">
+					 							<%= render 'favorites/like', post: post, favorite: @favorite %>
+											</div>
+										<% end %>
+										<%= post.favorites.count %>
+									</div>
+								</div>
+							</div>
+						<% end %>
+					</div>
+					<div id="post2" class="tab-pane">
+						<% @all_ranks.each do |post| %>
+				   			<%= image_tag post.user.profile_image.url %>
+							<%= post.user.name %>
+							<%= post.body %>
+							<% if post.post_image.present? %>
+								<%= image_tag post.post_image.url %>
+							<% end %>
+							<% if post.post_video.file.present? %>
+								<%= video_tag post.post_video_url.to_s,autoplay: true, loop: true, controls: true, width: 300 %>
+							<% end %>
+				   		<% end %>
+				   	</div>
+				 </div>
+			</ul>
+		</div>
+		<div class="col-2">
+			<p>人気のユーザー</p>
+		</div>
+	</div>
+</div>
