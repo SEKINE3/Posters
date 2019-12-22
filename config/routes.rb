@@ -10,6 +10,5 @@ Rails.application.routes.draw do
   resources :comments
   resources :relationships
   resources :favorites, only: [:create, :destroy]
-  resources :contacts, only: [:index, :create, :update]
-  resources :notifications, only: [:index]
+  resources :notifications, only: [:index, :create, :destroy]
 end

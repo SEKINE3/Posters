@@ -24,7 +24,7 @@
 			<li>投稿</li>
 		</div>
 		<div class="col-6">
-			<% if @user = current_user %>
+			<% if @user == current_user %>
 				<div class="row">
 					<div class="col-12">
 						<%= @user.name %>
@@ -54,13 +54,47 @@
 		    			</li>
 		 				<div class="tab-content">
   							<div id="post1" class="tab-pane active">
-  								<div class="post-border">
-  									<div class="row">
-  										<div class="col-12">
-											ああああ
-  										</div>
-  									</div>
-  								</div>
+  								<% @followers.each do |follower| %>
+									<% follower.posts.each do |post| %>
+		  								<div class="post-border">
+		  									<div class="row">
+		  										<div class="col-2">
+													<%= image_tag follower.profile_image.url, :size => '50x50' %>
+												</div>
+												<div class="col-6">
+													<div class="post-user-name">
+														<%= post.user.name %>
+													</div>
+												</div>
+												<div class="col-4">
+													<% if current_user != follower %>
+														<div class="follow-form<%= follower.id %>">
+															<% if current_user.following?(follower) %>
+															    <%= render 'relationships/unfollow', user: follower %>
+															<% else %>
+															    <%= render 'relationships/follow', user: follower %>
+															<% end %>
+														</div>
+												<% end %>
+												</div>
+												<div class="col-10 offset-2">
+													<div class="post-body">
+														<%= post.body %>
+													</div>
+												</div>
+												<div class="col-9 offset-1">
+													<% if post.post_image.present? %>
+														<%= image_tag post.post_image.url, :size=> '400x300' %>
+													<% end %>
+													<% if post.post_video.file.present? %>
+														<%= video_tag post.post_video_url.to_s,autoplay: true, loop: true, controls: true, width: 300 %>
+													<% end %>
+												</div>
+												<div class="col-2"></div>
+		  									</div>
+		  								</div>
+		  							<% end %>
+								<% end %>
 							</div>
 							<div id="post2" class="tab-pane">
 								<% current_user.posts.each do |post| %>
@@ -107,7 +141,7 @@
 											</div>
 											<div class="col-4">
 												<% if current_user != follower %>
-													<div id="follow_form">
+													<div class="follow-form<%= follower.id %>">
 														<% if current_user.following?(follower) %>
 														    <%= render 'relationships/unfollow', user: follower %>
 														<% else %>
@@ -134,7 +168,7 @@
 											</div>
 											<div class="col-4">
 												<% if current_user != following %>
-													<div id="follow_form">
+													<div class="follow-form<%= following.id %>">
 														<% if current_user.following?(following) %>
 														    <%= render 'relationships/unfollow', user: following %>
 														<% else %>
@@ -156,19 +190,17 @@
 						<%= @user.name %>
 					</div>
 					<ul class="nav nav-tabs">
-						<div class="col-12">
-							<li class="nav-item">
-			    				<a href="#other_post1" class="nav-link active" data-toggle="tab">投稿</a>
-			    			</li>
-			    			<li class="nav-item">
-			    				<a href="#other_fol1" class="nav-link" data-toggle="tab">フォロー中</a>
-			    			</li>
-			    			 <li class="nav-item">
-			    				<a href="#other_fol2" class="nav-link" data-toggle="tab">フォロワー</a>
-			    			</li>
-			    		</div>
+						<li class="nav-item">
+		    				<a href="#other_post1" class="nav-link active" data-toggle="tab">投稿</a>
+		    			</li>
+		    			<li class="nav-item">
+		    				<a href="#other_fol1" class="nav-link" data-toggle="tab">フォロー中</a>
+		    			</li>
+		    			 <li class="nav-item">
+		    				<a href="#other_fol2" class="nav-link" data-toggle="tab">フォロワー</a>
+		    			</li>
 			    		<div id="other_post1" class="tab-pane active">
-							<%= @user.post.each do |post| %>
+							<% @user.posts.each do |post| %>
 								<div class="post-border">
 									<div class="row">
 										<div class="col-2">
@@ -199,7 +231,7 @@
 							<% end %>
 						</div>
 						<div id="other_fol1" class="tab-pane">
-							<%= @followers.each do |follower| %>
+							<% @followers.each do |follower| %>
 								<div class="post-border">
 									<div class="row">
   										<div class="col-2">
@@ -212,7 +244,7 @@
 										</div>
 										<div class="col-4">
 											<% if current_user != follower %>
-												<div id="follow_form">
+												<div class="follow_form<%= @user.id %>">
 													<% if current_user.following?(follower) %>
 													    <%= render 'relationships/unfollow', user: follower %>
 													<% else %>
@@ -226,7 +258,7 @@
 							<% end %>
 						</div>
 						<div id="other_fol2" class="tab-pane">
-							<%= @followings.each do |following| %>
+							<% @followings.each do |following| %>
 								<div class="post-border">
 									<div class="row">
   										<div class="col-2">
@@ -239,7 +271,7 @@
 										</div>
 										<div class="col-4">
 											<% if current_user != following %>
-												<div id="follow_form">
+												<div class="follow_form">
 													<% if current_user.following?(following) %>
 													    <%= render 'relationships/unfollow', user: following %>
 													<% else %>
@@ -258,15 +290,16 @@
 		</div>
 		<div class="col-3">
 			<div class="row">
-				<div class="col-8 offset-4">
+				<div class="col-10 offset-2">
 					<p>HOT ユーザー</p>
 				</div>
-				<div class="col-7 offset-5">
-					<p>
+			</div>
+			<div class="row">
+				<div class="col-11 offset-1">
 						<% @all_ranks.each do |user| %>
-							<%= @user.name %>
+							<%= user.name %>
+							<%= user.followers.count %>
 						<% end %>
-					</p>
 				<div>
 				<div class="col-8 offset-4">
 					<p>おすすめユーザー</p>
