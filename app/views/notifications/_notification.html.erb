@@ -1,5 +1,5 @@
-<% sender = notification.sender %>
-<% recipient = notificatin.recipient %>
+<% sender = notifications.sender %>
+<% recipient = notificatins.recipient %>
 <%= link_to user_path(sender) do %>
 	<%= sender.name %>さんが
 <% end %>
@@ -11,6 +11,6 @@
 	<% when 'commment' then %>
 		<% if notification.post.user_id == recipient.id %>
 			<%=link_to 'あなたの投稿', notification.post %>にコメントしました。
-	<%= Comment.find_by(id: notification.comment_id)&.comment %>
+		<% end %>
 <% end %>
 <%= time_ago_in_words(notification.created_at).upcase %>

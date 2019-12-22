@@ -10,7 +10,7 @@ class UsersController < ApplicationController
 		@user = User.find(params[:id])
 		@followers = @user.followers
 		@followings = @user.followings
-		@all_ranks = User.find(Relationship.group(:following_id).order('count(following_id) desc').limit(3).pluck(:following_id))
+		@all_ranks = User.find(Relationship.group(:follower_id).order('count(follower_id) desc').limit(3).pluck(:follower_id))
 		@post = Post.new
 	end
 
