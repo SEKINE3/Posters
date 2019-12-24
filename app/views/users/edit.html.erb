@@ -1,51 +1,30 @@
 <div class="container">
 	<div class="row">
-		<div class="col-4 offset-6">
-			<%= form_tag(post_search_path,method: :get, role:"search") do %>
-		      <%= text_field_tag "keyword", "" %>
-		    <% end %>
-		</div>
-		<div class="col-2">
-			<%= link_to "ログアウト", destroy_user_session_path, method: :delete %>
-		</div>
-	</div>
-	<div class="row">
 		<div class="col-3">
-			<%= link_to user_path(current_user) do %>
-					<li>ホーム</li>
-			<% end %>
-			<li><%= link_to edit_user_path(current_user) do %>
-					プロフィール
-				<% end %>
-			</li>
-			<li>投稿</li>
+			<%= render "shares/lside" %>
 		</div>
 		<div class="col-6">
-			<%= form_for(@user) do |f| %>
-				<li>名前</li>
-				<%= f.text_field :name %>
-				<li>自己紹介</li>
-				<%= f.text_area :introduction %>
-				<li>プロフィール画像</li>
-				<%= f.file_field :profile_image %>
-				<%= f.submit "更新" %>
-			<% end %>
+			<div class="row">
+				<div class="edit-title">プロフィール編集</div>
+				<%= form_for(@user) do |f| %>
+					<div class="edit-subtitle">名前</div>
+					<div class="edit-content">
+						<%= f.text_field :name %>
+					</div>
+					<div class="edit-subtitle">自己紹介</div>
+					<div class="edit-content">
+						<%= f.text_area :introduction, size: "30x5", class: "form-control"%>
+					</div>
+					<div class="edit-subtitle">プロフィール画像</div>
+					<div class="edit-content">
+						<%= f.file_field :profile_image %>
+					</div>
+					<input class="submit_button" type="submit" name="submit" value="更新する">
+				<% end %>
+			</div>
 		</div>
 		<div class="col-3">
-			<div class="row">
-				<div class="col-8 offset-4">
-					<p>HOT ユーザー</p>
-				</div>
-				<div class="col-7 offset-5">
-					<p>一週間で最もフォローされたユーザ５人</p>
-				<div>
-				<div class="col-8 offset-4">
-					<p>おすすめユーザー</p>
-				</div>
-				<div class="col-7 offset-5">
-					<p>自分がフォローしているユーザーがフォローしているユーザー</p>
-				</div>
-			</div>
+			<%= render "shares/rside", user_ranking: @user_ranking %>
 		</div>
 	</div>
 </div>

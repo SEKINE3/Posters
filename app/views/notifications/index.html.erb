@@ -1,21 +1,47 @@
-<% if @notifications.exists? %>
-	<% @notifications.each do |notification| %>
-		<%= link_to user_path(notification.sender) do %>
-			<%= notification.sender.name %>さんが
-		<% end %>
-		<% case notification.status %>
-			<% when 'follow' then %>
-				<p>あなたをフォローしました</p>
-			<% when 'favorite' then %>
-				<%=link_to 'あなたの投稿', notification.post %>にいいねしました。
-			<% when 'commment' then %>
-				<% if notification.post.user_id == recipient.id %>
-					<%=link_to 'あなたの投稿', notification.post %>にコメントしました。
+<div class="container">
+	<div class="row">
+		<div class="col-3">
+			<%= render "shares/lside" %>
+		</div>
+		<div class="col-6">
+			<div class="row">
+				<% if @notifications.exists? %>
+					<table class="table table-striped">
+						<tr>
+							<th>通知一覧</th>
+							<th>time</th>
+						</tr>
+						<% @notifications.each do |notification| %>
+							<tr>
+								<td>
+									<%= link_to user_path(notification.sender) do %>
+										<%= notification.sender.name %>
+									<% end %>
+									<% case notification.status %>
+										<% when 'follow' then %>
+											さんがあなたをフォローしました
+										<% when 'favorite' then %>
+											さんが<%=link_to 'あなたの投稿', notification.post %>にいいねしました。
+										<% when 'commment' then %>
+											<% if notification.post.user_id == recipient.id %>
+												さんが<%=link_to 'あなたの投稿', notification.post %>にコメントしました。
+											<% end %>
+									<% end %>
+								</td>
+								<td>
+									<%= time_ago_in_words(notification.created_at).upcase %>前
+								</td>
+							</tr>
+						<% end %>
+					</table>
+					<%= paginate @notifications %>
+				<% else %>
+					<P>>通知はありません<</P>
 				<% end %>
-		<% end %>
-		<%= time_ago_in_words(notification.created_at).upcase %>
-	<% end %>
-	<%= paginate @notifications %>
-<% else %>
-	<P>>通知はありません<</P>
-<% end %>
+			</div>
+		</div>
+		<div class="col-3">
+			<%= render "shares/rside", user_ranking: @user_ranking %>
+		</div>
+	</div>
+</div>

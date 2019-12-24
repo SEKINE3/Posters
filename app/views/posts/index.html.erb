@@ -1,9 +1,17 @@
-<%= link_to "ログイン", new_user_session_path %>
-<%= link_to "アカウント作成",new_user_registration_path %>
-<%= link_to "ログアウト", destroy_user_session_path, method: :delete %>
 <div class="container">
 	<div class="row">
-		<div class="col-8 col-offset2">
+		<div class="col-2">
+			<% if user_signed_in? %>
+			<% else %>
+				<div class="index-sign-log">
+					<%= link_to "ログイン", new_user_session_path, :style=>"color: #FFFFFF"%>
+				</div>
+				<div class="index-sign-log">
+					<%= link_to "アカウント作成",new_user_registration_path, :style=>"color: #FFFFFF" %>
+				</div>
+			<% end %>
+		</div>
+		<div class="col-7">
 			<ul class="nav nav-tabs">
 				<li class="nav-item">
     				<a href="#post1" class="nav-link active" data-toggle="tab">最新の投稿</a>
@@ -21,7 +29,9 @@
 									</div>
 									<div class="col-7">
 										<div class="post-user-name">
-											<%= post.user.name %>
+											<%= link_to user_path(post.user.id) do %>
+												<%= post.user.name %>
+											<% end %>
 										</div>
 									</div>
 									<div class="col-4">
@@ -56,15 +66,16 @@
 											<div class="favorite_btn_<%= post.id %>">
 					 							<%= render 'favorites/like', post: post, favorite: @favorite %>
 											</div>
+										<% else %>
+											<i class="fas fa-heart" style="color: #FF6928;"></i> <%= post.favorites.count %>
 										<% end %>
-										<%= post.favorites.count %>
 									</div>
 								</div>
 							</div>
 						<% end %>
 					</div>
 					<div id="post2" class="tab-pane">
-						<% @all_ranks.each do |post| %>
+						<% @post_rankings.each do |post| %>
 				   			<div class="post-border">
 	  							<div class="row">
 	  								<div class="col-1">
@@ -72,7 +83,9 @@
 									</div>
 									<div class="col-7">
 										<div class="post-user-name">
-											<%= post.user.name %>
+											<%= link_to user_path(post.user.id) do %>
+												<%= post.user.name %>
+											<% end %>
 										</div>
 									</div>
 									<div class="col-4">
@@ -107,8 +120,9 @@
 											<div class="favorite_btn_<%= post.id %>">
 					 							<%= render 'favorites/like', post: post, favorite: @favorite %>
 											</div>
+										<% else %>
+											<i class="fas fa-heart" style="color: #FF6928;"></i> <%= post.favorites.count %>
 										<% end %>
-										<%= post.favorites.count %>
 									</div>
 								</div>
 							</div>
@@ -117,8 +131,8 @@
 				 </div>
 			</ul>
 		</div>
-		<div class="col-2">
-			<p>人気のユーザー</p>
+		<div class="col-3">
+			<%= render "shares/rside", user_ranking: @user_ranking %>
 		</div>
 	</div>
 </div>
