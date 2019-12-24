@@ -6,8 +6,9 @@ Rails.application.routes.draw do
   get 'post/search' => 'posts#search'
 
   resources :users
-  resources :posts
-  resources :comments
+  resources :posts, only: [:index, :show, :create, :destroy]do
+    resource :comments, only: [:create, :destroy]
+  end
   resources :relationships
   resources :favorites, only: [:create, :destroy]
   resources :notifications, only: [:index, :create, :destroy]

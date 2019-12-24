@@ -1,8 +1,10 @@
 class UsersController < ApplicationController
 	before_action :authenticate_user!, only: [:show, :edit, :update, :destroy]
+	before_action :authenticate_user, only:[:edit]
 
 	def index
 		@users = User.all
+		@user_rankings = User.find(Relationship.group(:follower_id).order('count(follower_id) desc').limit(3).pluck(:follower_id))
 		@post = Post.new
 	end
 
@@ -10,12 +12,13 @@ class UsersController < ApplicationController
 		@user = User.find(params[:id])
 		@followers = @user.followers
 		@followings = @user.followings
-		@all_ranks = User.find(Relationship.group(:follower_id).order('count(follower_id) desc').limit(3).pluck(:follower_id))
-		@post = Post.new
+		@user_rankings = User.find(Relationship.group(:following_id).order('count(following_id) desc').limit(3).pluck(:following_id))
+		@newpost = Post.new
 	end
 
 	def edit
 		@user = User.find(params[:id])
+		@user_rankings = User.find(Relationship.group(:following_id).order('count(following_id) desc').limit(3).pluck(:following_id))
 	end
 
 	def update
@@ -27,12 +30,18 @@ class UsersController < ApplicationController
 	def destroy
 		@user = User(params[:id])
 		@user.destroy
-		redirect_to posts_path
+		redirect_to root_path
 	end
 
 	private
-		def user_params
+	def user_params
 			params.require(:user).permit(:name, :introduction, :profile_image, :back_image)
+	end
+
+	def authenticate_user
+		if params[:id].to_i != current_user.id
+	   		redirect_to user_path(current_user.id)
 		end
+	end
 
 end

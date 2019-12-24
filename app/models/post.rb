@@ -60,8 +60,6 @@ class Post < ApplicationRecord
     tmp_ids.each do |tmp_id|
       save_notification_comment!(current_user, comment_id, tmp_id['user_id'])
     end
-    # まだ誰もコメントしていない場合は、投稿者に通知を送る
-    save_notification_comment!(current_user, comment_id, user_id) if tmp_ids.blank?
   end
 
   def save_notification_comment(current_user, comment_id, recipient_id)

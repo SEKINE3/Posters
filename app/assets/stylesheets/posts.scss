@@ -1,3 +1,22 @@
 // Place all the styles related to the posts controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+.index-sign-log {
+  width: 80%;
+  height: 50px;
+  margin-top: 30px;
+  padding-top: 8%;
+  font-weight: 600;
+  background-color: #1E90FF;
+  font-size: 100%;
+  border-style: none;
+  border-radius: 30px;
+  text-align: center;
+}
+
+.search-keyword {
+  font-weight: 600;
+  font-size: 30px;
+  margin: 0.5em 0 0.5em 0;
+}
