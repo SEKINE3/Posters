@@ -54,26 +54,4 @@ class Post < ApplicationRecord
 			notification.save if notification.valid?
 	end
 
-	def create_notification_comment!(current_user, comment_id)
-    tmp_ids = Comment.select(:user_id).where(post_id: id).where.not(user_id: current_user.id).distinct
-    # distinctで重複しないようにする
-    tmp_ids.each do |tmp_id|
-      save_notification_comment!(current_user, comment_id, tmp_id['user_id'])
-    end
-  end
-
-  def save_notification_comment(current_user, comment_id, recipient_id)
-    # コメントは複数回することが考えられるため、１つの投稿に複数回通知する
-    notification = current_user.active_notifications.new(
-      post_id: id,
-      comment_id: comment_id,
-      recipient_id: recipient_id,
-      action: 'comment'
-    )
-    # 自分の投稿に対する自分のコメントの場合は、通知済みとする
-    if notification.sender_id == notification.recipient_id
-      notification.checked = true
-    end
-    notification.save if notification.valid?
-  end
 end

@@ -3,19 +3,54 @@
 		<p>HOT ユーザー</p>
 	</div>
 	<% @user_rankings.each do |user| %>
-		<div class="col-10 offset-2">
+		<div class="col-5 offset-1">
 			<%= link_to user_path(user.id) do %>
 				<%= image_tag user.profile_image.url, :size => '50x50' %>
-				<%= user.name %>
 			<% end %>
 		</div>
-		<div class="col-8 offset-4" style="margin-bottom: 15px;">
+		<div class="col-6">
+			<% if current_user != user %>
+				<div class="follow-form<%= user.id %>">
+					<% if current_user.following?(user) %>
+					    <%= render 'relationships/unfollow', user: user %>
+					<% else %>
+					    <%= render 'relationships/follow', user: user %>
+					<% end %>
+				</div>
+			<% end %>
+		</div>
+		<div class="col-4 offset-1">
+			<%= user.name %>
+		</div>
+		<div class="col-6 offset-1" style="margin-bottom: 15px;">
 			<%= user.followings.count %> フォロワー
 		</div>
 	<% end %>
-	<div class="col-9 offset-3" style="margin-top: 20px;">
-		<p>おすすめユーザー</p>
-	</div>
-	<div class="col-8 offset-4">
-	</div>
+	<% if user_signed_in? %>
+		<div class="col-9 offset-3" style="margin-top: 20px;">
+			<p>おすすめユーザー</p>
+		</div>
+		<% @follow_follows.each do |user| %>
+			<div class="col-5 offset-1">
+				<%= link_to user_path(user.id) do %>
+					<%= image_tag user.profile_image.url, :size => '50x50' %>
+				<% end %>
+			</div>
+			<div class="col-6">
+				<% if current_user != user %>
+					<div class="follow-form<%= user.id %>">
+						<% if current_user.following?(user) %>
+						    <%= render 'relationships/unfollow', user: user %>
+						<% else %>
+						    <%= render 'relationships/follow', user: user %>
+						<% end %>
+					</div>
+				<% end %>
+			</div>
+			<div class="col-4 offset-1">
+				<%= user.name %>
+			</div>
+			<div class="col-6"></div>
+		<% end %>
+	<% end %>
 </div>

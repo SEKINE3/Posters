@@ -5,7 +5,6 @@ class CommentsController < ApplicationController
         @comment = current_user.comments.new(comment_params)
     	@comment.post_id = @post.id
         if  @comment.save
-    	    @post.create_notification_comment!(current_user, @comment.id)
             redirect_to post_path(@post.id)
         else
             "render posts/show"
