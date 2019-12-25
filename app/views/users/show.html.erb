@@ -277,7 +277,7 @@
 											</div>
 											<div class="col-4">
 												<% if current_user != follower %>
-													<div class="follow_form<%= @user.id %>">
+													<div class="follow-form<%= follower.id %>">
 														<% if current_user.following?(follower) %>
 														    <%= render 'relationships/unfollow', user: follower %>
 														<% else %>
@@ -304,7 +304,7 @@
 											</div>
 											<div class="col-4">
 												<% if current_user != following %>
-													<div class="follow_form">
+													<div class="follow-form<%= following.id %>">
 														<% if current_user.following?(following) %>
 														    <%= render 'relationships/unfollow', user: following %>
 														<% else %>
@@ -323,7 +323,7 @@
 			<% end %>
 		</div>
 		<div class="col-3">
-			<%= render "shares/rside", user_ranking: @user_ranking %>
+			<%= render "shares/rside", user_ranking: @user_ranking, follow_follows: @follow_follows %>
 		</div>
 	</div>
 </div>
