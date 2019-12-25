@@ -4,7 +4,7 @@ class UsersController < ApplicationController
 
 	def index
 		@users = User.all
-		@user_rankings = User.find(Relationship.group(:follower_id).order('count(follower_id) desc').limit(3).pluck(:follower_id))
+		@user_rankings = User.find(Relationship.group(:following_id).order('count(following_id) desc').limit(3).pluck(:following_id))
 		@post = Post.new
 	end
 
@@ -14,6 +14,15 @@ class UsersController < ApplicationController
 		@followings = @user.followings
 		@user_rankings = User.find(Relationship.group(:following_id).order('count(following_id) desc').limit(3).pluck(:following_id))
 		@newpost = Post.new
+
+		user_ids = []
+		current_user.followers.each do |follower|
+			follower.followers.each do |follower_follower|
+				user_ids += follower_follower.active_relationships.where.not(following_id: follower.id).pluck(:follower_id)
+			end
+		end
+		uniq_user_ids = user_ids.uniq.sample(3)
+		@follow_follows = User.find(uniq_user_ids)
 	end
 
 	def edit

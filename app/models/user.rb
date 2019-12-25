@@ -16,6 +16,8 @@ class User < ApplicationRecord
   #class_nameで便宜的に"User"モデルを分け(followingとfollower)、followingテーブルーrelationshioテーブルーfollowerテーブルの形を作り、has_many,thoughを使いfollowingテーブルから直接followerテーブルを定義している
   has_many :followings, through: :passive_relationships, source: :following
 
+  #has_many :follower_followers, through: :followers
+
   def follow(other_user) #ユーザをフォローする
     self.active_relationships.create(follower_id: other_user.id)
   end
@@ -25,7 +27,7 @@ class User < ApplicationRecord
   end
 
   def following?(other_user) #フォローしているかどうかを確認する(フォローしていたらtrueを返す)
-    followers.include?(other_user) #followedの中にユーザが含まれているかどうか
+    followers.include?(other_user) #followersの中にユーザが含まれているかどうか
   end
 
   has_many :active_notifications, class_name: "Notification",
