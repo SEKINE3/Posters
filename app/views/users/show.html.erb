@@ -231,90 +231,92 @@
 		    			 <li class="nav-item">
 		    				<a href="#other3" class="nav-link" data-toggle="tab">フォロワー</a>
 		    			</li>
-			    		<div id="other1" class="tab-pane active">
-							<% @user.posts.each do |post| %>
-								<div class="post-border">
-									<div class="row">
-										<div class="col-2">
-											<%= image_tag post.user.profile_image.url, :size => '50x50' %>
-										</div>
-										<div class="col-6">
-											<div class="post-user-name">
-												<%= post.user.name %>
+		    			<div class="tab-content">
+				    		<div id="other1" class="tab-pane active">
+								<% @user.posts.each do |post| %>
+									<div class="post-border">
+										<div class="row">
+											<div class="col-2">
+												<%= image_tag post.user.profile_image.url, :size => '50x50' %>
 											</div>
-										</div>
-										<div class="col-4"></div>
-										<div class="col-10 offset-2">
-											<div class="post-body">
-												<%= post.body %>
-											</div>
-										</div>
-										<div class="col-9 offset-1">
-											<% if post.post_image.present? %>
-												<%= image_tag post.post_image.url, :size=> '400x300' %>
-											<% end %>
-											<% if post.post_video.file.present? %>
-												<%= video_tag post.post_video_url.to_s,autoplay: true, loop: true, controls: true, width: 300 %>
-											<% end %>
-										</div>
-										<div class="col-2"></div>
-									</div>
-								</div>
-							<% end %>
-						</div>
-						<div id="other2" class="tab-pane">
-							<% @followers.each do |follower| %>
-								<div class="post-border">
-									<div class="row">
-  										<div class="col-2">
-											<%= image_tag follower.profile_image.url, :size => '50x50' %>
-										</div>
-										<div class="col-6">
-											<div class="post-user-name">
-												<%= follower.name %>
-											</div>
-										</div>
-										<div class="col-4">
-											<% if current_user != follower %>
-												<div class="follow_form<%= @user.id %>">
-													<% if current_user.following?(follower) %>
-													    <%= render 'relationships/unfollow', user: follower %>
-													<% else %>
-													    <%= render 'relationships/follow', user: follower %>
-													<% end %>
+											<div class="col-6">
+												<div class="post-user-name">
+													<%= post.user.name %>
 												</div>
-											<% end %>
+											</div>
+											<div class="col-4"></div>
+											<div class="col-10 offset-2">
+												<div class="post-body">
+													<%= post.body %>
+												</div>
+											</div>
+											<div class="col-9 offset-1">
+												<% if post.post_image.present? %>
+													<%= image_tag post.post_image.url, :size=> '400x300' %>
+												<% end %>
+												<% if post.post_video.file.present? %>
+													<%= video_tag post.post_video_url.to_s,autoplay: true, loop: true, controls: true, width: 300 %>
+												<% end %>
+											</div>
+											<div class="col-2"></div>
 										</div>
 									</div>
-								</div>
-							<% end %>
-						</div>
-						<div id="other3" class="tab-pane">
-							<% @followings.each do |following| %>
-								<div class="post-border">
-									<div class="row">
-  										<div class="col-2">
-											<%= image_tag following.profile_image.url, :size => '50x50' %>
-										</div>
-										<div class="col-6">
-											<div class="post-user-name">
-												<%= following.name %>
+								<% end %>
+							</div>
+							<div id="other2" class="tab-pane">
+								<% @followers.each do |follower| %>
+									<div class="post-border">
+										<div class="row">
+	  										<div class="col-2">
+												<%= image_tag follower.profile_image.url, :size => '50x50' %>
+											</div>
+											<div class="col-6">
+												<div class="post-user-name">
+													<%= follower.name %>
+												</div>
+											</div>
+											<div class="col-4">
+												<% if current_user != follower %>
+													<div class="follow_form<%= @user.id %>">
+														<% if current_user.following?(follower) %>
+														    <%= render 'relationships/unfollow', user: follower %>
+														<% else %>
+														    <%= render 'relationships/follow', user: follower %>
+														<% end %>
+													</div>
+												<% end %>
 											</div>
 										</div>
-										<div class="col-4">
-											<% if current_user != following %>
-												<div class="follow_form">
-													<% if current_user.following?(following) %>
-													    <%= render 'relationships/unfollow', user: following %>
-													<% else %>
-													    <%= render 'relationships/follow', user: following %>
-													<% end %>
+									</div>
+								<% end %>
+							</div>
+							<div id="other3" class="tab-pane">
+								<% @followings.each do |following| %>
+									<div class="post-border">
+										<div class="row">
+	  										<div class="col-2">
+												<%= image_tag following.profile_image.url, :size => '50x50' %>
+											</div>
+											<div class="col-6">
+												<div class="post-user-name">
+													<%= following.name %>
 												</div>
-											<% end %>
+											</div>
+											<div class="col-4">
+												<% if current_user != following %>
+													<div class="follow_form">
+														<% if current_user.following?(following) %>
+														    <%= render 'relationships/unfollow', user: following %>
+														<% else %>
+														    <%= render 'relationships/follow', user: following %>
+														<% end %>
+													</div>
+												<% end %>
+											</div>
 										</div>
 									</div>
-								</div>
-							<% end %>
+								<% end %>
+							</div>
 						</div>
 					</ul>
 				</div>
