@@ -74,9 +74,15 @@
 										</div>
 										<div class="col-2 offset-2">
 											<% if user_signed_in? %>
-												<div class="favorite_btn_<%= post.id %>">
+												<div class="favorite_btn_<%= @post.id %>">
 						 							<%= render 'favorites/like', post: post, favorite: @favorite %>
 												</div>
+											<% end %>
+										</div>
+										<div class="col- 2 offset-1">
+											<i class="far fa-comment"></i>
+											<% if post.comments.present? %>
+												<%= post.comments.count %>
 											<% end %>
 										</div>
 									</div>
@@ -117,7 +123,7 @@
 			</div>
 		</div>
 		<div class="col-3">
-			<%= render "shares/rside", user_ranking: @user_ranking, follow_follows: @follow_follows %>
+
 		</div>
 	</div>
 </div>
