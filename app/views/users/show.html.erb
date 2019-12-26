@@ -109,7 +109,9 @@
 													<%= post.user.name %>
 												</div>
 											</div>
-											<div class="col-4"></div>
+											<div class="col-4">
+												<%= link_to "削除", post_path(post.id), method: :delete, "data-confirm" => "本当に削除しますか？" ,class: "btn btn-danger" %>
+											</div>
 											<div class="col-10 offset-2">
 												<div class="post-body">
 													<%= link_to post_path(post.id), :style=>"color: black" do %>

@@ -14,7 +14,7 @@
 					<%= f.file_field :post_video %>
 					<input class="submit_button" type="submit" name="submit" value="投稿する">
 				<% end %>
-			</div>li>
+			</div>
 		</div>
 		<div class="col-6">
 			<div class="row">
@@ -61,7 +61,9 @@
 										</div>
 										<div class="col-10 offset-2">
 											<div class="post-body">
-												<%= post.body %>
+												<%= link_to post_path(post.id), :style=>"color: black" do %>
+													<%= post.body %>
+												<% end %>
 											</div>
 										</div>
 										<div class="col-10 offset-2">
@@ -74,7 +76,7 @@
 										</div>
 										<div class="col-2 offset-2">
 											<% if user_signed_in? %>
-												<div class="favorite_btn_<%= @post.id %>">
+												<div class="favorite_btn_<%= post.id %>">
 						 							<%= render 'favorites/like', post: post, favorite: @favorite %>
 												</div>
 											<% end %>
@@ -123,7 +125,7 @@
 			</div>
 		</div>
 		<div class="col-3">
-
+			<%= render "shares/rside", user_ranking: @user_ranking, follow_follows: @follow_follows %>
 		</div>
 	</div>
 </div>

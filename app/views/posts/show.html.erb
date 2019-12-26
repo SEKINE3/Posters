@@ -10,61 +10,65 @@
 						<div class="col-12">
 							<%= f.text_area :body, size: "60x5", class: "form-control" %>
 						</div>
-						<div class="col-3 offset-9">
+						<div class="col-3 offset-9" style="margin-bottom: 20px;">
 							<%= f.submit 'コメントする' %>
 						</div>
 					<% end %>
 				<% end %>
-				<div class="col-3">
-					<%= image_tag @user.profile_image.url, :size => '50x50' %>
-				</div>
-				<div class="col-5">
-					<div class="post-user-name">
-						<%= link_to user_path(@user.id) do %>
-							<%= @user.name %>
+			</div>
+			<div class="post-show">
+				<div class="row">
+					<div class="col-3">
+						<%= image_tag @user.profile_image.url, :size => '50x50' %>
+					</div>
+					<div class="col-5">
+						<div class="post-user-name">
+							<%= link_to user_path(@user.id) do %>
+								<%= @user.name %>
+							<% end %>
+						</div>
+					</div>
+					<div class="col-4">
+						<% if current_user != @user.id %>
+							<div class="follow-form<%= @user.id %>">
+								<% if current_user.following?(@user) %>
+								    <%= render 'relationships/unfollow', user: @user %>
+								<% else %>
+								    <%= render 'relationships/follow', user: @user %>
+								<% end %>
+							</div>
+						<% end %>
+					</div>
+					<div class="col-10 offset-2">
+						<div class="post-body">
+							<%= @post.body %>
+						</div>
+					</div>
+					<div class="col-10 offset-2">
+						<% if @post.post_image.present? %>
+							<%= image_tag @post.post_image.url, :size=> '400x300' %>
+						<% end %>
+						<% if @post.post_video.file.present? %>
+							<%= video_tag @post.post_video_url.to_s,autoplay: true, loop: true, controls: true, width: 300 %>
+						<% end %>
+					</div>
+					<div class="col-2 offset-2">
+						<% if user_signed_in? %>
+							<div class="favorite_btn_<%= @post.id %>">
+	 							<%= render 'favorites/like', post: @post, favorite: @favorite %>
+							</div>
+						<% end %>
+					</div>
+					<div class="col- 2 offset-1">
+						<i class="far fa-comment"></i>
+						<% if @post.comments.present? %>
+							<%= @post.comments.count %>
 						<% end %>
 					</div>
 				</div>
-				<div class="col-4">
-					<% if current_user != @user.id %>
-						<div class="follow-form<%= @user.id %>">
-							<% if current_user.following?(@user) %>
-							    <%= render 'relationships/unfollow', user: @user %>
-							<% else %>
-							    <%= render 'relationships/follow', user: @user %>
-							<% end %>
-						</div>
-					<% end %>
-				</div>
-				<div class="col-10 offset-2">
-					<div class="post-body">
-						<%= @post.body %>
-					</div>
-				</div>
-				<div class="col-9 offset-1">
-					<% if @post.post_image.present? %>
-						<%= image_tag @post.post_image.url, :size=> '400x300' %>
-					<% end %>
-					<% if @post.post_video.file.present? %>
-						<%= video_tag @post.post_video_url.to_s,autoplay: true, loop: true, controls: true, width: 400 %>
-					<% end %>
-				</div>
-				<div class="col-2 offset-2">
-					<% if user_signed_in? %>
-						<div class="favorite_btn_<%= @post.id %>">
- 							<%= render 'favorites/like', post: @post, favorite: @favorite %>
-						</div>
-					<% end %>
-				</div>
-				<div class="col- 2 offset-1">
-					<i class="far fa-comment"></i>
-					<% if @post.comments.present? %>
-						<%= @post.comments.count %>
-					<% end %>
-				</div>
 			</div>
 			<div class="row">
-				<div class="col-12">
+				<div class="col-12" style="margin-bottom: 20px;">
 					<% @comments.each do |comment| %>
 						<div class="post-border">
 							<div class="row">
