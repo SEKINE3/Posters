@@ -14,14 +14,17 @@ class PostsController < ApplicationController
 		@user_rankings = User.find(Relationship.group(:following_id).order('count(following_id) desc').limit(3).pluck(:following_id))
 		@comments = @post.comments
 		@comment = Comment.new
-
+		ids = Relationship.where(following_id: current_user.id).pluck(:follower_id)
+		kds = Relationship.where(following_id: ids ).where.not(follower_id: current_user.id).where.not(follower_id: ids).pluck(:follower_id).sample(3)
+		@follow_follows = User.where(id: kds)
 	end
 
 	def create
 		@newpost = Post.new(post_params)
 		@newpost.user_id = current_user.id
 		if@newpost.save
-		  redirect_to user_path(current_user.id)
+			redirect_back(fallback_location: root_path)
+		  #redirect_to user_path(current_user.id)
 		end
 	end
 
@@ -36,15 +39,9 @@ class PostsController < ApplicationController
 		@users = User.where('users.name like ?', '%' + params[:keyword] + '%')
 		@user_rankings = User.find(Relationship.group(:following_id).order('count(following_id) desc').limit(3).pluck(:following_id))
 		@newpost = Post.new
-
-		user_ids = []
-		current_user.followers.each do |follower|
-			follower.followers.each do |follower_follower|
-				user_ids += follower_follower.active_relationships.where.not(following_id: follower.id).pluck(:following_id)
-			end
-		end
-		uniq_user_ids = user_ids.uniq.sample(3)
-		@follow_follows = User.find(uniq_user_ids) # アクティブレコードで取り出す場合where(id: uniq_user_ids)
+		ids = Relationship.where(following_id: current_user.id).pluck(:follower_id)
+		kds = Relationship.where(following_id: ids ).where.not(follower_id: current_user.id).where.not(follower_id: ids).pluck(:follower_id).sample(3)
+		@follow_follows = User.where(id: kds)
 	end
 
 	private
