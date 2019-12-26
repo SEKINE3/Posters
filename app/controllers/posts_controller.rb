@@ -5,15 +5,6 @@ class PostsController < ApplicationController
 		@posts = Post.all.order(created_at: :desc)
 		@post_rankings = Post.find(Favorite.group(:post_id).order('count(post_id) desc').limit(15).pluck(:post_id))
 		@user_rankings = User.find(Relationship.group(:following_id).order('count(following_id) desc').limit(3).pluck(:following_id))
-
-		user_ids = []
-		current_user.followers.each do |follower|
-			follower.followers.each do |follower_follower|
-				user_ids += follower_follower.active_relationships.where.not(following_id: follower.id).pluck(:following_id)
-			end
-		end
-		uniq_user_ids = user_ids.uniq.sample(3)
-		@follow_follows = User.find(uniq_user_ids) # アクティブレコードで取り出す場合where(id: uniq_user_ids)
 	end
 
 	def show
@@ -24,20 +15,12 @@ class PostsController < ApplicationController
 		@comments = @post.comments
 		@comment = Comment.new
 
-		user_ids = []
-		current_user.followers.each do |follower|
-			follower.followers.each do |follower_follower|
-				user_ids += follower_follower.active_relationships.where.not(following_id: follower.id).pluck(:following_id)
-			end
-		end
-		uniq_user_ids = user_ids.uniq.sample(3)
-		@follow_follows = User.find(uniq_user_ids) # アクティブレコードで取り出す場合where(id: uniq_user_ids)
 	end
 
 	def create
 		@newpost = Post.new(post_params)
 		@newpost.user_id = current_user.id
-		if@post.save
+		if@newpost.save
 		  redirect_to user_path(current_user.id)
 		end
 	end
