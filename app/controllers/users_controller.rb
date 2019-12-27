@@ -4,7 +4,7 @@ class UsersController < ApplicationController
 
 	def index
 		@users = User.all
-		@user_rankings = User.find(Relationship.group(:follower_id).order('count(follower_id) desc').limit(3).pluck(:follower_id))
+		@user_rankings = User.find(Relationship.group(:following_id).order('count(following_id) desc').limit(3).pluck(:following_id))
 		@post = Post.new
 
 	end
@@ -13,7 +13,7 @@ class UsersController < ApplicationController
 		@user = User.find(params[:id])
 		@followers = @user.followers
 		@followings = @user.followings
-		@user_rankings = User.find(Relationship.group(:follower_id).order('count(follower_id) desc').limit(3).pluck(:follower_id))
+		@user_rankings = User.find(Relationship.group(:following_id).order('count(following_id) desc').limit(3).pluck(:following_id))
 		@newpost = Post.new
 
 		ids = Relationship.where(following_id: current_user.id).pluck(:follower_id)
@@ -26,7 +26,7 @@ class UsersController < ApplicationController
 
 	def edit
 		@user = User.find(params[:id])
-		@user_rankings = User.find(Relationship.group(:follower_id).order('count(follower_id) desc').limit(3).pluck(:follower_id))
+		@user_rankings = User.find(Relationship.group(:following_id).order('count(following_id) desc').limit(3).pluck(:following_id))
 		ids = Relationship.where(following_id: current_user.id).pluck(:follower_id)
 		kds = Relationship.where(following_id: ids ).where.not(follower_id: current_user.id).where.not(follower_id: ids).pluck(:follower_id).sample(3)
 		@follow_follows = User.where(id: kds)
