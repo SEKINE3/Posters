@@ -4,14 +4,14 @@ class PostsController < ApplicationController
 	def index
 		@posts = Post.all.order(created_at: :desc)
 		@post_rankings = Post.find(Favorite.group(:post_id).order('count(post_id) desc').limit(15).pluck(:post_id))
-		@user_rankings = User.find(Relationship.group(:following_id).order('count(following_id) desc').limit(3).pluck(:following_id))
+		@user_rankings = User.find(Relationship.group(:follower_id).order('count(follower_id) desc').limit(3).pluck(:follower_id))
 	end
 
 	def show
 		@post = Post.find(params[:id])
 		@newpost = Post.new
 		@user = @post.user
-		@user_rankings = User.find(Relationship.group(:following_id).order('count(following_id) desc').limit(3).pluck(:following_id))
+		@user_rankings = User.find(Relationship.group(:follower_id).order('count(follower_id) desc').limit(3).pluck(:follower_id))
 		@comments = @post.comments
 		@comment = Comment.new
 		ids = Relationship.where(following_id: current_user.id).pluck(:follower_id)
