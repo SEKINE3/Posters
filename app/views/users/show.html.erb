@@ -1,166 +1,60 @@
+<header>
+	<%= render "shares/header" %>
+</header>
 <div class="container">
 	<div class="row">
-		<div class="col-4 offset-6">
-		</div>
-		<div class="col-2">
-			<%= link_to "ログアウト", destroy_user_session_path, method: :delete %>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-3">
-			<div style="margin-bottom: 20px;">
-				<%= form_tag(post_search_path,method: :get, role:"search") do %>
-			      <%= text_field_tag "keyword", "", {class:"form-control", placeholder:"キーワードを入力"}  %>
-			    <% end %>
-			</div>
-			<%= render "shares/lside" %>
-			<div class="new">
-				<%= form_for(@newpost) do |f| %>
-					<%= f.text_area :body, size: "30x5", class: "form-control" %>
-					<%= f.file_field :post_image %>
-					<%= f.file_field :post_video %>
-					<input class="submit_button" type="submit" name="submit" value="投稿する">
-				<% end %>
-			</div>
-		</div>
-		<div class="col-6">
+		<div class="col-8">
 			<% if @user == current_user %>
-				<div class="row">
-					<div class="col-12">
-						<%= image_tag @user.profile_image.url, :size=> '100x100' %>
-						<%= @user.name %>
-					</div>
-					<ul class="nav nav-tabs">
-						<li class="nav-item">
-		    				<a href="#post1" class="nav-link active" data-toggle="tab">投稿</a>
-		 				</li>
-		 				<li class="nav-item">
-		    				<a href="#post2" class="nav-link" data-toggle="tab">自分の投稿</a>
-		 				 </li>
-		 				<li class="nav-item">
-		    				<a href="#fol1" class="nav-link" data-toggle="tab">フォロー中</a>
-		    			</li>
-		    			 <li class="nav-item">
-		    				<a href="#fol2" class="nav-link" data-toggle="tab">フォロワー</a>
-		    			</li>
-		 				<div class="tab-content">
-  							<div id="post1" class="tab-pane active">
-  								<% @followers.each do |follower| %>
-									<% follower.posts.each do |post| %>
-		  								<div class="post-border">
-		  									<div class="row">
-		  										<div class="col-2">
-													<%= image_tag follower.profile_image.url, :size => '50x50' %>
-												</div>
-												<div class="col-6">
-													<div class="post-user-name">
-														<%= link_to user_path(follower.id) do %>
-															<%= post.user.name %>
-														<% end %>
-													</div>
-												</div>
-												<div class="col-4">
-													<% if current_user != follower %>
-														<div class="follow-form<%= follower.id %>">
-															<% if current_user.following?(follower) %>
-															    <%= render 'relationships/unfollow', user: follower %>
-															<% else %>
-															    <%= render 'relationships/follow', user: follower %>
-															<% end %>
-														</div>
-												<% end %>
-												</div>
-												<div class="col-10 offset-2">
-													<div class="post-body">
-														<%= link_to post_path(post.id), :style=>"color: black" do %>
-															<%= post.body %>
-														<% end %>
-													</div>
-												</div>
-												<div class="col-11 offset-1">
-													<% if post.post_image.present? %>
-														<%= image_tag post.post_image.url, :size=> '400x300' %>
-													<% end %>
-													<% if post.post_video.file.present? %>
-														<%= video_tag post.post_video_url.to_s,autoplay: true, loop: true, controls: true, width: 300 %>
-													<% end %>
-												</div>
-												<div class="col-2 offset-2">
-													<% if user_signed_in? %>
-														<div class="favorite_btn_<%= post.id %>">
-								 							<%= render 'favorites/like', post: post, favorite: @favorite %>
-														</div>
-													<% end %>
-												</div>
-		  									</div>
-		  								</div>
-		  							<% end %>
+				<div class="user-img">
+					<%= image_tag @user.profile_image.url, :size=> '100x100' %>
+				</div>
+				<div class="search-keyword">
+					<%= @user.name %>
+				</div>
+				<ul class="nav nav-pills" style="margin-top: 20px;">
+					<li class="nav-item">
+	    				<a href="#post1" class="nav-link active" data-toggle="tab">投稿</a>
+	 				</li>
+	 				<li class="nav-item">
+	    				<a href="#post2" class="nav-link" data-toggle="tab">自分の投稿</a>
+	 				 </li>
+	 				<li class="nav-item">
+	    				<a href="#fol1" class="nav-link" data-toggle="tab">フォロー中</a>
+	    			</li>
+	    			 <li class="nav-item">
+	    				<a href="#fol2" class="nav-link" data-toggle="tab">フォロワー</a>
+	    			</li>
+	 				<div class="tab-content">
+						<div id="post1" class="tab-pane active">
+							<div class="show_post_contents">
+								<% @follow_posts.each do |post| %>
+									<%= render "posts/post-index", post: post %>
 								<% end %>
 							</div>
-							<div id="post2" class="tab-pane">
-								<% current_user.posts.each do |post| %>
-									<div class="post-border">
-										<div class="row">
-											<div class="col-2">
-												<%= image_tag current_user.profile_image.url, :size => '50x50' %>
-											</div>
-											<div class="col-6">
-												<div class="post-user-name">
-													<%= post.user.name %>
-												</div>
-											</div>
-											<div class="col-4">
-												<%= link_to "削除", post_path(post.id), method: :delete, "data-confirm" => "本当に削除しますか？" ,class: "btn btn-danger" %>
-											</div>
-											<div class="col-10 offset-2">
-												<div class="post-body">
-													<%= link_to post_path(post.id), :style=>"color: black" do %>
-														<%= post.body %>
-													<% end %>
-												</div>
-											</div>
-											<div class="col-11 offset-1">
-												<% if post.post_image.present? %>
-													<%= image_tag post.post_image.url, :size=> '400x300' %>
-												<% end %>
-												<% if post.post_video.file.present? %>
-													<%= video_tag post.post_video_url.to_s,autoplay: true, loop: true, controls: true, width: 300 %>
-												<% end %>
-											</div>
-											<div class="col-2 offset-2">
-												<i class="fas fa-heart" style="color: #FF6928;"></i>
-													<% if post.favorites.present? %>
-														<%= post.favorites.count %>
-													<% end %>
-											</div>
-											<div class="col- 2 offset-1">
-												<i class="far fa-comment"></i>
-												<% if post.comments.present? %>
-													<%= post.comments.count %>
-												<% end %>
-											</div>
-										</div>
-									</div>
-								<% end %>
-							</div>
-							<div id="fol1" class="tab-pane">
-								<%= render "users/followinguser", followers: @followers %>
-							</div>
-							<div id="fol2" class="tab-pane">
-								<%= render "users/userfollower", following: @followings %>
+							<div class="pagenation">
+								<%= link_to_next_page @follow_posts, '次のページ' %>
 							</div>
 						</div>
-					</ul>
-				</div>
-			<% else %>
-				<div class="row">
-					<div class="col-3">
-						<%= image_tag @user.profile_image.url, :size=> '100x100' %>
+						<div id="post2" class="tab-pane">
+							<% @user.posts.order(created_at: :desc).each do |post| %>
+								<%= render "posts/post-index", post: post %>
+							<% end %>
+						</div>
+						<div id="fol1" class="tab-pane">
+							<%= render "users/followinguser", followers: @followers %>
+						</div>
+						<div id="fol2" class="tab-pane">
+							<%= render "users/userfollower", following: @followings %>
+						</div>
 					</div>
-					<div class="col-3" style="padding-top: 2.5em;">
+				</ul>
+			<% else %>
+				<div class="user-title">
+					<div class="user-img">
+						<%= image_tag @user.profile_image.url, :size=> '100x100' %>
 						<%= @user.name %>
 					</div>
-					<div class="col-4 offset-2" style="padding-top: 2em;">
+					<div class="right">
 						<% if current_user != @user %>
 							<div class="follow-form<%= @user.id %>">
 								<% if current_user.following?(@user) %>
@@ -171,73 +65,37 @@
 							</div>
 						<% end %>
 					</div>
-					<ul class="nav nav-tabs">
-						<li class="nav-item">
-		    				<a href="#other1" class="nav-link active" data-toggle="tab">投稿</a>
-		    			</li>
-		    			<li class="nav-item">
-		    				<a href="#other2" class="nav-link" data-toggle="tab">フォロー中</a>
-		    			</li>
-		    			 <li class="nav-item">
-		    				<a href="#other3" class="nav-link" data-toggle="tab">フォロワー</a>
-		    			</li>
-		    			<div class="tab-content">
-				    		<div id="other1" class="tab-pane active">
-								<% @user.posts.each do |post| %>
-									<div class="post-border">
-										<div class="row">
-											<div class="col-2">
-												<%= image_tag post.user.profile_image.url, :size => '50x50' %>
-											</div>
-											<div class="col-6">
-												<div class="post-user-name">
-													<%= post.user.name %>
-												</div>
-											</div>
-											<div class="col-4"></div>
-											<div class="col-10 offset-2">
-												<div class="post-body">
-													<%= post.body %>
-												</div>
-											</div>
-											<div class="col-9 offset-1">
-												<% if post.post_image.present? %>
-													<%= image_tag post.post_image.url, :size=> '400x300' %>
-												<% end %>
-												<% if post.post_video.file.present? %>
-													<%= video_tag post.post_video_url.to_s,autoplay: true, loop: true, controls: true, width: 300 %>
-												<% end %>
-											</div>
-											<div class="col-2 offset-2">
-												<% if user_signed_in? %>
-													<div class="favorite_btn_<%= post.id %>">
-							 							<%= render 'favorites/like', post: post, favorite: @favorite %>
-													</div>
-												<% end %>
-											</div>
-											<div class="col- 2 offset-1">
-												<i class="far fa-comment"></i>
-												<% if post.comments.present? %>
-													<%= post.comments.count %>
-												<% end %>
-											</div>
-										</div>
-									</div>
-								<% end %>
-							</div>
-							<div id="other2" class="tab-pane">
-								<%= render "users/followinguser", followers: @followers %>
-							</div>
-							<div id="other3" class="tab-pane">
-								<%= render "users/userfollower", following: @followings %>
-							</div>
-						</div>
-					</ul>
 				</div>
+				<ul class="nav nav-pills" style="margin-top: 30px;">
+					<li class="nav-item">
+	    				<a href="#other1" class="nav-link active" data-toggle="tab">投稿</a>
+	    			</li>
+	    			<li class="nav-item">
+	    				<a href="#other2" class="nav-link" data-toggle="tab">フォロー中</a>
+	    			</li>
+	    			 <li class="nav-item">
+	    				<a href="#other3" class="nav-link" data-toggle="tab">フォロワー</a>
+	    			</li>
+	    			<div class="tab-content">
+			    		<div id="other1" class="tab-pane active">
+							<% @user.posts.each do |post| %>
+								<%= render "posts/post-index", post: post %>
+							<% end %>
+						</div>
+						<div id="other2" class="tab-pane">
+							<%= render "users/followinguser", followers: @followers %>
+						</div>
+						<div id="other3" class="tab-pane">
+							<%= render "users/userfollower", following: @followings %>
+						</div>
+					</div>
+				</ul>
 			<% end %>
 		</div>
-		<div class="col-3">
+		<div class="col-4">
 			<%= render "shares/rside", user_ranking: @user_rankings, follow_follows: @follow_follows %>
 		</div>
 	</div>
 </div>
+
+<script src="js/infinite_scroll.js"></script>

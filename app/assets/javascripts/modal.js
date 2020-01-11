@@ -1,9 +1,9 @@
 $(function(){
-	$('#modal-open').on('click', function(){
-		$('#modal-overlay, #modal-content').fadeIn();
+	$('#modal-open-noti').on('click', function(){
+		$('#modal-overlay, #modal-content-noti').fadeIn();
 	});
 	$('#modal-close, #modal-overlay').on('click',function(){
-		$('#modal-overlay, #modal-content').fadeOut();
+		$('#modal-overlay, #modal-content-noti').fadeOut();
 	});
 
 	locateCenter();
@@ -13,10 +13,10 @@ $(function(){
     let w = $(window).width();
     let h = $(window).height();
 
-    let cw = $('#modal-content').outerWidth();
-    let ch = $('#modal-content').outerHeight();
+    let cw = $('#modal-content-noti').outerWidth();
+    let ch = $('#modal-content-noti').outerHeight();
 
-    $('#modal-content').css({
+    $('#modal-content-noti').css({
       'left': ((w - cw) / 2) + 'px',
       'top': ((h - ch) / 2) + 'px'
     });

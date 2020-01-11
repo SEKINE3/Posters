@@ -1,0 +1,33 @@
+<% if user_signed_in? %>
+	<%= link_to user_path(current_user.id) do %>
+		<h3>Posters</h3>
+	<% end %>
+	<div id="modal-overlay"></div>
+	<div class="header-search">
+		<%= form_tag(post_search_path,method: :get, role:"search") do %>
+			<%= text_field_tag "keyword", "", {class:"form-control", placeholder:"キーワードで検索"}  %>
+		<% end %>
+	</div>
+	<li id="modal-open-edit"><%= image_tag current_user.profile_image.url, :size => '40x40' %>
+		<div class="edit">編集</div>
+	</li>
+	<div id="modal-content-edit">
+		<%= render "users/edit" %>
+	</div>
+	<li id="modal-open-noti">
+		<i class="fa fa-bell" aria-hidden="true">通知</i>
+	</li>
+	<div id="modal-content-noti">
+		<%= render "notifications/notifi" %>
+	</div>
+	<li><%= link_to "ログアウト", destroy_user_session_path, method: :delete %></li>
+<% else %>
+	<%= link_to root_path do %>
+		<h3>Posters</h3>
+	<% end %>
+	<li style="margin-top: 8px;"><%= link_to "ログイン", new_user_session_path %></li>
+	<li style="margin-top: 8px;"><%= link_to "アカウント作成",new_user_registration_path %></li>
+<% end %>
+
+<script src="js/modal.js"></script>
+<script src="js/edit.js"></script>

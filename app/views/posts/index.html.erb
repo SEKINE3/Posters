@@ -1,18 +1,10 @@
+<header>
+	<%= render "shares/header" %>
+</header>
 <div class="container">
 	<div class="row">
-		<div class="col-2">
-			<% if user_signed_in? %>
-			<% else %>
-				<div class="index-sign-log">
-					<%= link_to "ログイン", new_user_session_path, :style=>"color: #FFFFFF"%>
-				</div>
-				<div class="index-sign-log">
-					<%= link_to "アカウント作成",new_user_registration_path, :style=>"color: #FFFFFF" %>
-				</div>
-			<% end %>
-		</div>
-		<div class="col-7">
-			<ul class="nav nav-tabs">
+		<div class="col-8">
+			<ul class="nav nav-pills">
 				<li class="nav-item">
     				<a href="#post1" class="nav-link active" data-toggle="tab">最新の投稿</a>
  				 </li>
@@ -21,120 +13,22 @@
  				 </li>
  				 <div class="tab-content">
   					<div id="post1" class="tab-pane active">
-  						<% @posts.each do |post| %>
-  							<div class="post-border">
-	  							<div class="row">
-	  								<div class="col-1">
-										<%= image_tag post.user.profile_image.url, :size => '50x50' %>
-									</div>
-									<div class="col-7">
-										<div class="post-user-name">
-											<%= link_to user_path(post.user.id) do %>
-												<%= post.user.name %>
-											<% end %>
-										</div>
-									</div>
-									<div class="col-4">
-										<% if user_signed_in? %>
-											<% if current_user != post.user %>
-												<div id="follow_form">
-													<% if current_user.following?(post.user) %>
-													    <%= render 'relationships/unfollow', user: post.user %>
-													<% else %>
-													    <%= render 'relationships/follow', user: post.user %>
-													<% end %>
-												</div>
-											<% end %>
-										<% end %>
-									</div>
-									<div class="col-10 offset-2">
-										<div class="post-body">
-											<%= post.body %>
-										</div>
-									</div>
-									<div class="col-8 offset-2">
-										<% if post.post_image.present? %>
-											<%= image_tag post.post_image.url, :size=> '400x300' %>
-										<% end %>
-										<% if post.post_video.file.present? %>
-											<%= video_tag post.post_video_url.to_s,autoplay: true, loop: true, controls: true, width: 300 %>
-										<% end %>
-									</div>
-									<div class="col-2"></div>
-									<div class="col-2 offset-2">
-										<% if user_signed_in? %>
-											<div class="favorite_btn_<%= post.id %>">
-					 							<%= render 'favorites/like', post: post, favorite: @favorite %>
-											</div>
-										<% else %>
-											<i class="fas fa-heart" style="color: #FF6928;"></i> <%= post.favorites.count %>
-										<% end %>
-									</div>
-								</div>
-							</div>
+						<% @posts.each do |post| %>
+							<%= render "posts/post-index", post: post %>
 						<% end %>
 					</div>
 					<div id="post2" class="tab-pane">
 						<% @post_rankings.each do |post| %>
-				   			<div class="post-border">
-	  							<div class="row">
-	  								<div class="col-1">
-										<%= image_tag post.user.profile_image.url, :size => '50x50' %>
-									</div>
-									<div class="col-7">
-										<div class="post-user-name">
-											<%= link_to user_path(post.user.id) do %>
-												<%= post.user.name %>
-											<% end %>
-										</div>
-									</div>
-									<div class="col-4">
-										<% if user_signed_in? %>
-											<% if current_user != post.user %>
-												<div id="follow_form">
-													<% if current_user.following?(post.user) %>
-													    <%= render 'relationships/unfollow', user: post.user %>
-													<% else %>
-													    <%= render 'relationships/follow', user: post.user %>
-													<% end %>
-												</div>
-											<% end %>
-										<% end %>
-									</div>
-									<div class="col-10 offset-2">
-										<div class="post-body">
-											<%= post.body %>
-										</div>
-									</div>
-									<div class="col-8 offset-2">
-										<% if post.post_image.present? %>
-											<%= image_tag post.post_image.url, :size=> '400x300' %>
-										<% end %>
-										<% if post.post_video.file.present? %>
-											<%= video_tag post.post_video_url.to_s,autoplay: true, loop: true, controls: true, width: 300 %>
-										<% end %>
-									</div>
-									<div class="col-2"></div>
-									<div class="col-2 offset-2">
-										<% if user_signed_in? %>
-											<div class="favorite_btn_<%= post.id %>">
-					 							<%= render 'favorites/like', post: post, favorite: @favorite %>
-											</div>
-										<% else %>
-											<i class="fas fa-heart" style="color: #FF6928;"></i> <%= post.favorites.count %>
-										<% end %>
-									</div>
-								</div>
-							</div>
+		   					<%= render "posts/post-index", post: post %>
 						<% end %>
 				   	</div>
 				 </div>
 			</ul>
 		</div>
-		<div class="col-3">
+		<div class="col-4">
 			<div class="row">
 				<div class="col-9 offset-3">
-					<p>HOT ユーザー</p>
+					<div class="rside-title">HOT ユーザー</div>
 				</div>
 				<% @user_rankings.each do |user| %>
 					<div class="col-5 offset-1">
@@ -156,7 +50,7 @@
 						<% end %>
 					</div>
 					<div class="col-4 offset-1">
-						<%= link_to user_path(user.id) do %>
+						<%= link_to user_path(user.id), :style=>"color:black;" do %>
 							<%= user.name %>
 						<% end %>
 					</div>

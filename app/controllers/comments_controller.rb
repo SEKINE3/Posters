@@ -5,10 +5,18 @@ class CommentsController < ApplicationController
         @comment = current_user.comments.new(comment_params)
     	@comment.post_id = @post.id
         if  @comment.save
-            redirect_to post_path(@post.id)
+            render :index
         else
             "render posts/show"
     	end
+    end
+
+    def destroy
+        @comment = Comment.find(params[:id])
+        if @comment.destroy
+            render :index
+        end
+        # redirect_back(fallback_location: root_path)
     end
 
     private

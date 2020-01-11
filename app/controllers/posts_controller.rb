@@ -11,7 +11,6 @@ class PostsController < ApplicationController
 		@post = Post.find(params[:id])
 		@newpost = Post.new
 		@user = @post.user
-		@user_rankings = User.find(Relationship.group(:following_id).order('count(following_id) desc').limit(3).pluck(:following_id))
 		@comments = @post.comments
 		@comment = Comment.new
 		ids = Relationship.where(following_id: current_user.id).pluck(:follower_id)
@@ -22,22 +21,21 @@ class PostsController < ApplicationController
 	def create
 		@newpost = Post.new(post_params)
 		@newpost.user_id = current_user.id
-		if@newpost.save
+		if @newpost.save
 			redirect_back(fallback_location: root_path)
-		  #redirect_to user_path(current_user.id)
+			flash[:success] = '投稿に成功しました。'
 		end
 	end
 
-	def destory
+	def destroy
 		@post = Post.find(params[:id])
-		@post.destory
+		@post.destroy
 		redirect_to user_path(@post.user.id)
 	end
 
 	def search
 		@posts = Post.where('posts.body like ?', '%' + params[:keyword] + '%').order(created_at: :desc)
 		@users = User.where('users.name like ?', '%' + params[:keyword] + '%')
-		@user_rankings = User.find(Relationship.group(:following_id).order('count(following_id) desc').limit(3).pluck(:following_id))
 		@newpost = Post.new
 		ids = Relationship.where(following_id: current_user.id).pluck(:follower_id)
 		kds = Relationship.where(following_id: ids ).where.not(follower_id: current_user.id).where.not(follower_id: ids).pluck(:follower_id).sample(3)

@@ -2,35 +2,18 @@ class UsersController < ApplicationController
 	before_action :authenticate_user!, only: [:show, :edit, :update, :destroy]
 	before_action :authenticate_user, only:[:edit]
 
-	def index
-		@users = User.all
-		@user_rankings = User.find(Relationship.group(:following_id).order('count(following_id) desc').limit(3).pluck(:following_id))
-		@post = Post.new
-
-	end
-
 	def show
 		@user = User.find(params[:id])
 		@followers = @user.followers
 		@followings = @user.followings
-		@user_rankings = User.find(Relationship.group(:following_id).order('count(following_id) desc').limit(3).pluck(:following_id))
 		@newpost = Post.new
 
 		ids = Relationship.where(following_id: current_user.id).pluck(:follower_id)
 		#Relationshipモデルからfollowing_id(フォローする側)がcurrent_useruserのfollower_idを配列でとる
-		kds = Relationship.where(following_id: ids ).where.not(follower_id: current_user.id).where.not(follower_id: ids).pluck(:follower_id).sample(3)
+		kds = Relationship.where(following_id: ids ).where.not(follower_id: current_user.id).where.not(follower_id: ids).pluck(:follower_id).sample(5)
 		#current_userがフォローしている人がfollowing_id(フォローする側)でかつfollower_id(フォローされる側)がcurrent_user、current_userのフォローしている人でないidを配列でランダム(sample)に3つとる
 		@follow_follows = User.where(id: kds)
-	end
-
-
-	def edit
-		@user = User.find(params[:id])
-		@user_rankings = User.find(Relationship.group(:following_id).order('count(following_id) desc').limit(3).pluck(:following_id))
-		ids = Relationship.where(following_id: current_user.id).pluck(:follower_id)
-		kds = Relationship.where(following_id: ids ).where.not(follower_id: current_user.id).where.not(follower_id: ids).pluck(:follower_id).sample(3)
-		@follow_follows = User.where(id: kds)
-
+		@follow_posts = Post.where(user_id: ids).order(created_at: :desc).page(params[:page]).per(20)
 	end
 
 	def update

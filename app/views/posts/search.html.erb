@@ -1,130 +1,68 @@
+<header>
+	<%= render "shares/header" %>
+</header>
 <div class="container">
 	<div class="row">
-		<div class="col-3">
-			<div style="margin-bottom: 20px;">
-				<%= form_tag(post_search_path,method: :get, role:"search") do %>
-			      <%= text_field_tag "keyword", "" %>
-			    <% end %>
-			</div>
-			<%= render "shares/lside" %>
-			<div class="new">
-				<%= form_for(@newpost) do |f| %>
-					<%= f.text_area :body, size: "30x5", class: "form-control" %>
-					<%= f.file_field :post_image %>
-					<%= f.file_field :post_video %>
-					<input class="submit_button" type="submit" name="submit" value="投稿する">
-				<% end %>
-			</div>
-		</div>
-		<div class="col-6">
+		<div class="col-8">
 			<div class="row">
-				<div class="col-8">
+				<div class="col-12">
 					<div class="search-keyword">
 						"<%= params[:keyword] %>の検索結果"
 					</div>
 				</div>
-				<div class="col-4"></div>
-				<ul class="nav nav-tabs">
-					<li class="nav-item">
-						<a href="#post1" class="nav-link active" data-toggle="tab">投稿</a>
-						 </li>
-						 <li class="nav-item">
-						<a href="#post2" class="nav-link" data-toggle="tab">ユーザー名</a>
-					</li>
-					<div class="tab-content">
-						<div id="post1" class="tab-pane active">
-							<% @posts.each do |post| %>
-								<div class="post-border">
-		  							<div class="row">
-		  								<div class="col-2">
-											<%= image_tag post.user.profile_image.url, :size => '50x50' %>
-										</div>
-										<div class="col-6">
-											<div class="post-user-name">
-												<%= link_to user_path(post.user.id) do %>
-													<%= post.user.name %>
-												<% end %>
-											</div>
-										</div>
-										<div class="col-4">
-											<% if user_signed_in? %>
-												<% if current_user != post.user %>
-													<div id="follow_form<%= post.user.id %>">
-														<% if current_user.following?(post.user) %>
-														    <%= render 'relationships/unfollow', user: post.user %>
-														<% else %>
-														    <%= render 'relationships/follow', user: post.user %>
-														<% end %>
-													</div>
-												<% end %>
-											<% end %>
-										</div>
-										<div class="col-10 offset-2">
-											<div class="post-body">
-												<%= link_to post_path(post.id), :style=>"color: black" do %>
-													<%= post.body %>
-												<% end %>
-											</div>
-										</div>
-										<div class="col-10 offset-2">
-											<% if post.post_image.present? %>
-												<%= image_tag post.post_image.url, :size=> '400x300' %>
-											<% end %>
-											<% if post.post_video.file.present? %>
-												<%= video_tag post.post_video_url.to_s,autoplay: true, loop: true, controls: true, width: 300 %>
-											<% end %>
-										</div>
-										<div class="col-2 offset-2">
-											<% if user_signed_in? %>
-												<div class="favorite_btn_<%= post.id %>">
-						 							<%= render 'favorites/like', post: post, favorite: @favorite %>
-												</div>
-											<% end %>
-										</div>
-										<div class="col- 2 offset-1">
-											<i class="far fa-comment"></i>
-											<% if post.comments.present? %>
-												<%= post.comments.count %>
-											<% end %>
-										</div>
-									</div>
-								</div>
-							<% end %>
-						</div>
-						<div id="post2" class="tab-pane">
-							<% @users.each do |user| %>
-								<div class="post-border">
-									<div class="row">
-										<div class="col-2">
-											<%= image_tag user.profile_image.url, :size => '50x50' %>
-										</div>
-										<div class="col-6">
-											<div class="post-user-name">
-												<%= link_to user_path(user.id) do %>
-													<%= user.name %>
-												<% end %>
-											</div>
-										</div>
-										<div class="col-4">
-											<% if current_user != user %>
-												<div class="follow-form<%= user.id %>">
-													<% if current_user.following?(user) %>
-													    <%= render 'relationships/unfollow', user: user %>
-													<% else %>
-													    <%= render 'relationships/follow', user: user %>
+				<div class="col-12">
+					<ul class="nav nav-pills">
+						<li class="nav-item">
+							<a href="#post1" class="nav-link active" data-toggle="tab">投稿</a>
+							 </li>
+							 <li class="nav-item">
+							<a href="#post2" class="nav-link" data-toggle="tab">ユーザー名</a>
+						</li>
+						<div class="tab-content">
+							<div id="post1" class="tab-pane active">
+								<% @posts.each do |post| %>
+									<%= render "posts/post-index", post: post %>
+								<% end %>
+							</div>
+							<div id="post2" class="tab-pane">
+								<table class="table table-striped">
+									<% @users.each do |user| %>
+										<tr>
+											<td>
+												<div class="user-img">
+													<%= link_to user_path(user.id) do %>
+														<%= image_tag user.profile_image.url, :size => '50x50' %>
 													<% end %>
 												</div>
-											<% end %>
-										</div>
-									</div>
-								</div>
-							<% end %>
+												<div class="post-user-name">
+													<%= link_to user_path(user.id) do %>
+														<%= user.name %>
+													<% end %>
+												</div>
+											</td>
+											<td>
+												<div class="user-follow">
+													<% if current_user != user %>
+														<div class="follow-form<%= user.id %>">
+															<% if current_user.following?(user) %>
+															    <%= render 'relationships/unfollow', user: user %>
+															<% else %>
+															    <%= render 'relationships/follow', user: user %>
+															<% end %>
+														</div>
+													<% end %>
+												</div>
+											</td>
+										</tr>
+									<% end %>
+								</table>
+							</div>
 						</div>
-					</div>
-				</ul>
+					</ul>
+				</div>
 			</div>
 		</div>
-		<div class="col-3">
+		<div class="col-4">
 			<%= render "shares/rside", user_ranking: @user_ranking, follow_follows: @follow_follows %>
 		</div>
 	</div>
