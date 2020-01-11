@@ -1,29 +1,31 @@
-<% @followings.each do |following| %>
-	<div class="post-border">
-		<div class="row">
-			<div class="col-2">
-				<%= link_to user_path(following.id) do %>
-					<%= image_tag following.profile_image.url, :size => '50x50' %>
-				<% end %>
-			</div>
-			<div class="col-6">
+<table class="table table-striped">
+	<% @followings.each do |following| %>
+		<tr>
+			<td>
+				<div class="user-img">
+					<%= link_to user_path(following.id) do %>
+						<%= image_tag following.profile_image.url, :size => '50x50' %>
+					<% end %>
+				</div>
 				<div class="post-user-name">
 					<%= link_to user_path(following.id) do %>
 						<%= following.name %>
 					<% end %>
 				</div>
-			</div>
-			<div class="col-4">
-				<% if current_user != following %>
-					<div class="follow-form<%= following.id %>">
-						<% if current_user.following?(following) %>
-						    <%= render 'relationships/unfollow', user: following %>
-						<% else %>
-						    <%= render 'relationships/follow', user: following %>
-						<% end %>
-					</div>
-				<% end %>
-			</div>
-		</div>
-	</div>
-<% end %>
+			</td>
+			<td>
+				<div class="user-follow">
+					<% if current_user != following %>
+						<div class="follow-form<%= following.id %>">
+							<% if current_user.following?(following) %>
+							    <%= render 'relationships/unfollow', user: following %>
+							<% else %>
+							    <%= render 'relationships/follow', user: following %>
+							<% end %>
+						</div>
+					<% end %>
+				</div>
+			</td>
+		</tr>
+	<% end %>
+</table>

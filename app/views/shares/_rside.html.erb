@@ -1,62 +1,48 @@
 <div class="row">
-	<div class="col-9 offset-3">
-		<p>HOT ユーザー</p>
-	</div>
-	<% @user_rankings.each do |user| %>
-		<div class="col-5 offset-1">
-			<%= link_to user_path(user.id) do %>
-				<%= image_tag user.profile_image.url, :size => '50x50' %>
-			<% end %>
-		</div>
-		<div class="col-6">
-			<% if user_signed_in? %>
-				<% if current_user != user %>
-					<div class="follow-form<%= user.id %>">
-						<% if current_user.following?(user) %>
-						    <%= render 'relationships/unfollow', user: user %>
-						<% else %>
-						    <%= render 'relationships/follow', user: user %>
-						<% end %>
-					</div>
-				<% end %>
-			<% end %>
-		</div>
-		<div class="col-4 offset-1">
-			<%= link_to user_path(user.id) do %>
-				<%= user.name %>
-			<% end %>
-		</div>
-		<div class="col-6 offset-1" style="margin-bottom: 15px;">
-			<%= user.followings.count %> フォロワー
-		</div>
-	<% end %>
 	<% if user_signed_in? %>
-		<div class="col-9 offset-3" style="margin-top: 20px;">
-			<p>おすすめユーザー</p>
+		<%= form_for(@newpost) do |f| %>
+			<div class="rside-newpost">
+				<%= f.text_area :body, class: "form-control", placeholder:"テキストの入力は必須です!!", rows: 5 %>
+			</div>
+			<div class="rside-newimg">
+				<%=f.label :post_image do %>
+					<i class="fas fa-image fa-2x"></i>
+					<%= f.file_field :post_image, class:"np-img" %>
+				<% end %>
+				<%=f.label :post_video do %>
+					<i class="fas fa-video fa-2x" style="margin-left: 60%;"></i>
+					<%= f.file_field :post_video, class:"np-img" %>
+				<% end %>
+				<input class="submit_button" type="submit" name="submit" value="投稿する">
+			</div>
+		<% end %>
+		<div class="col-10 offset-2" style="margin-top: 40px;">
+			<div class="rside-title">おすすめユーザー</div>
 		</div>
 		<% @follow_follows.each do |user| %>
-			<div class="col-5 offset-1">
-				<%= link_to user_path(user.id) do %>
-					<%= image_tag user.profile_image.url, :size => '50x50' %>
-				<% end %>
-			</div>
-			<div class="col-6">
-				<% if current_user != user %>
-					<div class="follow-form<%= user.id %>">
-						<% if current_user.following?(user) %>
-						    <%= render 'relationships/unfollow', user: user %>
-						<% else %>
-						    <%= render 'relationships/follow', user: user %>
+			<table class="table table-hover" style="margin-bottom: 0;">
+				<tr>
+					<td>
+						<div class="rside-user">
+							<%= link_to user_path(user.id) do %>
+								<%= image_tag user.profile_image.url, :size => '50x50' %>
+								<%= user.name %>
+							<% end %>
+						</div>
+					</td>
+					<td style="text-align: right;">
+						<% if current_user != user %>
+							<div class="follow-form<%= user.id %>" style="margin-top: 4%;">
+								<% if current_user.following?(user) %>
+								    <%= render 'relationships/unfollow', user: user %>
+								<% else %>
+								    <%= render 'relationships/follow', user: user %>
+								<% end %>
+							</div>
 						<% end %>
-					</div>
-				<% end %>
-			</div>
-			<div class="col-4 offset-1">
-				<%= link_to user_path(user.id) do %>
-					<%= user.name %>
-				<% end %>
-			</div>
-			<div class="col-6"></div>
+					</td>
+				</tr>
+			</table>
 		<% end %>
 	<% end %>
 </div>

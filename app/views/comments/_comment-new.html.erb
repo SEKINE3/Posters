@@ -1,0 +1,26 @@
+<div class="card">
+    <div class="card-body">
+        <%= form_with(model: [@post, @comment] ) do |f| %>
+			<div class="c-body">
+				<%= f.text_area :body, class: "form-control", placeholder:"テキストの入力は必須です!!", rows: 3 %>
+			</div>
+			<div class="comment-ivs">
+				<div class="c-img">
+					<%=f.label :comment_image do %>
+						<i class="fas fa-image fa-2x"></i>
+						<%= f.file_field :comment_image, class:"np-img" %>
+					<% end %>
+				</div>
+				<div class="c-video">
+					<%=f.label :comment_video do %>
+						<i class="fas fa-video fa-2x" style="margin-left: 60%;"></i>
+						<%= f.file_field :comment_video, class:"np-img" %>
+					<% end %>
+				</div>
+				<div class="c-submit">
+					<input class="submit_button" type="submit" name="submit" value="コメントする">
+				</div>
+			</div>
+		<% end %>
+    </div>
+</div>

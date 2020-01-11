@@ -1,115 +1,87 @@
+<header>
+	<%= render "shares/header" %>
+</header>
 <div class="container">
 	<div class="row">
-		<div class="col-3">
-			<%= render "shares/lside" %>
-		</div>
-		<div class="col-6">
-			<div class="row">
-				<% if user_signed_in? %>
-					<%= form_for [@post, @comment] do |f| %>
-						<div class="col-12">
-							<%= f.text_area :body, size: "60x5", class: "form-control" %>
-						</div>
-						<div class="col-3 offset-9" style="margin-bottom: 20px;">
-							<%= f.submit 'コメントする' %>
-						</div>
+		<div class="col-8">
+			<div class="card bg-light" style="width: 100%">
+				<div class="card-header">
+					<%= image_tag @post.user.profile_image.url, :size => '50x50' %>
+					<%= link_to user_path(@post.user.id) do %>
+						<%= @post.user.name %>
 					<% end %>
-				<% end %>
-			</div>
-			<div class="post-show">
-				<div class="row">
-					<div class="col-3">
-						<%= image_tag @user.profile_image.url, :size => '50x50' %>
-					</div>
-					<div class="col-5">
-						<div class="post-user-name">
-							<%= link_to user_path(@user.id) do %>
-								<%= @user.name %>
-							<% end %>
-						</div>
-					</div>
-					<div class="col-4">
-						<% if current_user != @user.id %>
-							<div class="follow-form<%= @user.id %>">
-								<% if current_user.following?(@user) %>
-								    <%= render 'relationships/unfollow', user: @user %>
+					<% if user_signed_in? %>
+						<% if current_user != @post.user %>
+							<div class="follow-form<%= @post.user.id %>">
+								<% if current_user.following?(@post.user) %>
+								    <%= render 'relationships/unfollow', user: @post.user %>
 								<% else %>
-								    <%= render 'relationships/follow', user: @user %>
+								    <%= render 'relationships/follow', user: @post.user %>
 								<% end %>
 							</div>
 						<% end %>
-					</div>
-					<div class="col-10 offset-2">
-						<div class="post-body">
-							<%= @post.body %>
-						</div>
-					</div>
-					<div class="col-10 offset-2">
-						<% if @post.post_image.present? %>
-							<%= image_tag @post.post_image.url, :size=> '400x300' %>
-						<% end %>
-						<% if @post.post_video.file.present? %>
-							<%= video_tag @post.post_video_url.to_s,autoplay: true, loop: true, controls: true, width: 300 %>
-						<% end %>
-					</div>
-					<div class="col-2 offset-2">
-						<% if user_signed_in? %>
-							<div class="favorite_btn_<%= @post.id %>">
-	 							<%= render 'favorites/like', post: @post, favorite: @favorite %>
+						<% if @post.user == current_user %>
+							<div><%= link_to "削除", post_path(@post.id), method: :delete, "data-confirm" => "投稿を削除しますか？" ,class: "btn btn-danger" %>
 							</div>
 						<% end %>
+					<% end %>
+				</div>
+				<div class="card-body">
+					<div class="post-body">
+						<%= @post.body %>
 					</div>
-					<div class="col- 2 offset-1">
+					<div class="post-img">
+						<% if @post.post_image.present? %>
+							<%= image_tag @post.post_image.url %>
+						<% end %>
+					</div>
+					<div class="post-vid">
+						<% if @post.post_video.file.present? %>
+							<%= video_tag @post.post_video_url.to_s,autoplay: true, loop: true, controls: true %>
+						<% end %>
+					</div>
+				</div>
+				<div class="card-footer">
+					<div class="fov-btn">
+						<% if user_signed_in? %>
+							<div class="favorite_btn_<%= @post.id %>">
+									<%= render 'favorites/like', post: @post, favorite: @favorite %>
+							</div>
+						<% else %>
+							<i class="fas fa-heart" style="color: #FF6928;"></i> <%= @post.favorites.count %>
+						<% end %>
+					</div>
+					<div class="comment-icon">
 						<i class="far fa-comment"></i>
 						<% if @post.comments.present? %>
 							<%= @post.comments.count %>
 						<% end %>
 					</div>
+					<div class="created">
+						投稿日:<%= @post.created_at.strftime("%Y/%m/%d %H:%M") %>
+					</div>
 				</div>
 			</div>
-			<div class="row">
-				<div class="col-12" style="margin-bottom: 20px;">
-					<% @comments.each do |comment| %>
-						<div class="post-border">
-							<div class="row">
-								<div class="col-2">
-									<%= image_tag comment.user.profile_image.url, :size => '50x50' %>
-								</div>
-								<div class="col-6">
-									<%= comment.user.name %>
-								</div>
-								<div class="col-4">
-									<% if current_user != @user.id %>
-										<div class="follow-form<%= comment.user.id %>">
-											<% if current_user.following?(comment.user) %>
-											    <%= render 'relationships/unfollow', user: comment.user %>
-											<% else %>
-											    <%= render 'relationships/follow', user: comment.user %>
-											<% end %>
-										</div>
-									<% end %>
-								</div>
-								<div class="col-10 offset-2">
-									<div class="post-body">
-										<%= comment.body %>
-									</div>
-								</div>
-								<div class="col-11 offset-1">
-									<% if comment.comment_image.present? %>
-										<%= image_tag comment.comment_image.url, :size=> '400x300' %>
-									<% end %>
-									<% if comment.comment_video.file.present? %>
-										<%= video_tag comment.comment_video_url.to_s,autoplay: true, loop: true, controls: true, width: 300 %>
-									<% end %>
-								</div>
-							</div>
-						</div>
-					<% end %>
+			<% if user_signed_in? %>
+				<button type="button" class="btn btn-default btn-lg btn-block" data-toggle="collapse" data-target="#new-com1">コメントを作成する</button>
+				<div id="new-com1" class="collapse">
+					<%= render "comments/comment-new", post: @post, comment: @comment %>
 				</div>
+			<% end %>
+			<div id="comment-index">
+				<%= render "comments/index", comments: @comments, post: @post, comment: @comment %>
 			</div>
+			<% if user_signed_in? %>
+				<% if @post.comments.present? %>
+					<button type="button" class="btn btn-default btn-lg btn-block" data-toggle="collapse" data-target="#new-com2">コメントを作成する</button>
+					<div id="new-com2" class="collapse">
+						<%= render "comments/comment-new", post: @post, comment: @comment %>
+					</div>
+				<% end %>
+			<% end %>
 		</div>
-		<div class="col-3">
-		<%= render "shares/rside", user_ranking: @user_ranking %>
+		<div class="col-4">
+			<%= render "shares/rside", user_ranking: @user_ranking %>
 		</div>
 	</div>
 </div>
