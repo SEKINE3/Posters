@@ -62,22 +62,14 @@
 					</div>
 				</div>
 			</div>
-			<% if user_signed_in? %>
-				<button type="button" class="btn btn-default btn-lg btn-block" data-toggle="collapse" data-target="#new-com1">コメントを作成する</button>
-				<div id="new-com1" class="collapse">
-					<%= render "comments/comment-new", post: @post, comment: @comment %>
-				</div>
-			<% end %>
 			<div id="comment-index">
 				<%= render "comments/index", comments: @comments, post: @post, comment: @comment %>
 			</div>
 			<% if user_signed_in? %>
-				<% if @post.comments.present? %>
-					<button type="button" class="btn btn-default btn-lg btn-block" data-toggle="collapse" data-target="#new-com2">コメントを作成する</button>
-					<div id="new-com2" class="collapse">
-						<%= render "comments/comment-new", post: @post, comment: @comment %>
-					</div>
-				<% end %>
+				<button type="button" class="btn btn-default btn-lg btn-block" data-toggle="collapse" data-target="#new-com2">コメントを作成する</button>
+				<div id="new-com2" class="collapse">
+					<%= render "comments/comment-new", post: @post, comment: @comment %>
+				</div>
 			<% end %>
 		</div>
 		<div class="col-4">
