@@ -10,7 +10,7 @@ class Post < ApplicationRecord
 	mount_uploader :post_image, PostImageUploader
 	mount_uploader :post_video, PostVideoUploader
 
-	validates :body, presence: true, length: { maximum: 50 }
+	validates :body, presence: true, length: { maximum: 300 }
 
 	def favorite?(post, current_user)
 		post.favorites.find_by(user_id: current_user.id)

@@ -100,4 +100,11 @@
   font-size: 100%;
   border-style: none;
   border-radius: 30px;
+  box-shadow: 0 4px 6px #7e8183e6;
+}
+
+.edit-btn > input.submit_button:active {
+  box-shadow: none;
+  top: 1px;
+  position: relative;
 }
