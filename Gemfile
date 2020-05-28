@@ -72,7 +72,7 @@ gem 'jquery-rails'
 gem 'carrierwave'
 gem 'font-awesome-sass', '~> 5.4.1'
 gem 'gon'
-gem 'kaminari', '~> 1.1.1'
+gem 'kaminari', '~> 1.2.1'
 # gem 'kaminari', '~> 0.17.0'
 
 group :production do
